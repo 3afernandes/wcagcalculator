@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora Diretiva WCAG</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .container { max-width: 700px; margin: auto; }
+        .criterio { margin: 5px 0; display: flex; align-items: center; }
+        .criterio label { margin-left: 10px; }
+        .nao-aplicavel { color: gray; text-decoration: line-through; }
+        .checkbox { width: 20px; height: 20px; appearance: none; border: 2px solid black; display: inline-block; text-align: center; }
+        .nao-cumprido { background-color: black; }
+        .nao-aplicavel-checkbox { background-color: gray; }
+        .percentagem { font-size: 20px; font-weight: bold; margin-bottom: 20px; }
+        select { margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Calculadora Acessibilidade - WCAG</h1>
+        <label for="versaoWCAG">Escolha a versão da WCAG:</label>
+        <select id="versaoWCAG" onchange="carregarCriterios()">
+            <option value="2.2" selected>WCAG 2.2 (55 critérios)</option>
+            <option value="2.1">WCAG 2.1 (49 critérios)</option>
+        </select>
+        <h2 class="percentagem">Conformidade: <span id="percentagem">100%</span></h2>
+        <div id="criterios"></div>
+    </div>
+
+    <script>
+        const criteriosWCAG22 = [
+            "1.1.1. Conteúdo Não Textual", "1.2.1. Apenas Áudio e Apenas Vídeo (pré-gravado)", "1.2.2. Legendagem (pré-gravado)", "1.2.3. Áudiodescrição",
+            "1.2.4. Legendagem (em Direto)", "1.2.5. Áudiodescrição (pré-gravado)", "1.3.1. Info e Relacionamentos", "1.3.2 Sequência Significante",
+            "1.3.3. Características Sensoriais", "1.3.4. Orientação", "1.3.5 Identificar Propósito de Entrada", "1.4.1 Utilização da Cor",
+            "1.4.2 Controlo de Áudio", "1.4.3 Contraste (Mínimo)", "1.4.4 Redimensionar Texto", "1.4.5 Imagens de Texto",
+            "1.4.10 Realinhar", "1.4.11 Contraste de Conteúdo não Textual", "1.4.12 Espaçamento de Texto", "1.4.13 Conteúdo on Hover ou Foco",
+            "2.1.1 Teclado", "2.1.2 Não bloquear o Teclado", "2.1.4 Teclas de Atalho Caráter", "2.2.1 Tempo Ajustável",
+            "2.2.2 Pausar, Parar, Ocultar", "2.3.1 Três Flashes ou Abaixo do Limiar", "2.4.1 Saltar Blocos", "2.4.2 Página Intitulada",
+            "2.4.3 Ordem o Foco", "2.4.4 Propósito da Hiperligação (em Contexto)", "2.4.5 Múltiplas Formas", "2.4.6 Cabeçalhos e Etiquetas",
+            "2.4.7 Foco Visível", "2.4.11 Foco Não Obscurecido (mínimo)", "2.5.1 Gestos de Apontador", "2.5.2 Cancelamento de Apontador",
+            "2.5.3 Etiqueta no Nome", "2.5.4 Atuação de Movimento", "2.5.7 Movimentos de arrasto", "2.5.8 Tamanho do Alvo",
+            "3.1.1 Idioma da Página", "3.1.2 Idioma das Partes", "3.2.1 Sobre o Foco", "3.2.2 Sobre uma Entrada",
+            "3.2.3 Navegação Consistente", "3.2.4 Identificação Consistente", "3.2.6 Ajuda Consistente", "3.3.1 Identificação de Erro",
+            "3.3.2 Etiquetas ou Instruções", "3.3.3 Sugestão de Correção de Erro", "3.3.4 Prevenção de Erro (Legal, Financeiro, Dados)",
+            "3.3.7 Entrada redundante", "3.3.8 Autenticação acessível (mínima)", "4.1.2 Nome, Papel, Valor", "4.1.3 Mensagens de Status"
+        ];
+
+        const criteriosWCAG21 = criteriosWCAG22.filter(c => ![
+            "2.4.11 Foco Não Obscurecido (mínimo)",
+            "2.5.7 Movimentos de arrasto",
+            "2.5.8 Tamanho do Alvo",
+            "3.2.6 Ajuda Consistente",
+            "3.3.7 Entrada redundante",
+            "3.3.8 Autenticação acessível (mínima)"
+        ].includes(c));
+
+        let criterios = criteriosWCAG22;
+        let totalCriterios = criterios.length;
+
+        const criteriosContainer = document.getElementById("criterios");
+        const percentagemElemento = document.getElementById("percentagem");
+
+        function carregarCriterios() {
+            const versao = document.getElementById('versaoWCAG').value;
+            criterios = versao === '2.1' ? criteriosWCAG21 : criteriosWCAG22;
+            totalCriterios = criterios.length;
+            criteriosContainer.innerHTML = '';
+
+            criterios.forEach((criterio, index) => {
+                const div = document.createElement("div");
+                div.classList.add("criterio");
+                div.innerHTML = `<input type="checkbox" class="checkbox" id="criterio${index}" onclick="alternarEstado(${index})"> 
+                                 <label id="label${index}" for="criterio${index}">${criterio}</label>`;
+                criteriosContainer.appendChild(div);
+            });
+            atualizarPercentagem();
+        }
+
+        function atualizarPercentagem() {
+            const checkboxes = document.querySelectorAll('.checkbox');
+            const naoAplicaveis = Array.from(checkboxes).filter(cb => cb.classList.contains('nao-aplicavel-checkbox')).length;
+            const naoCumpridos = Array.from(checkboxes).filter(cb => cb.classList.contains('nao-cumprido')).length;
+            const avaliaveis = totalCriterios - naoAplicaveis;
+            const percentagem = avaliaveis > 0 ? (((avaliaveis - naoCumpridos) / avaliaveis) * 100).toFixed(2) : 100;
+            percentagemElemento.textContent = `${percentagem}%`;
+        }
+
+        function alternarEstado(index) {
+            const checkbox = document.getElementById(`criterio${index}`);
+            const label = document.getElementById(`label${index}`);
+            if (!checkbox.classList.contains('nao-cumprido') && !checkbox.classList.contains('nao-aplicavel-checkbox')) {
+                checkbox.classList.add('nao-cumprido');
+            } else if (checkbox.classList.contains('nao-cumprido')) {
+                checkbox.classList.remove('nao-cumprido');
+                checkbox.classList.add('nao-aplicavel-checkbox');
+                label.classList.add('nao-aplicavel');
+            } else {
+                checkbox.classList.remove('nao-aplicavel-checkbox');
+                label.classList.remove('nao-aplicavel');
+            }
+            atualizarPercentagem();
+        }
+
+        carregarCriterios();
+    </script>
+</body>
+</html>
