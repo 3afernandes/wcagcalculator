@@ -23,7 +23,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>Calculadora Acessibilidade - WCAG</h1>
+        <h1>Calculadora de Acessibilidade - WCAG</h1>
         <div class="dropdown-container">
             <label for="versaoWCAG">Escolhe a versão da WCAG:</label>
             <select id="versaoWCAG" onchange="carregarCriterios()">
@@ -32,9 +32,11 @@
             </select>
         </div>
         <div class="container">
-        <p>Marca os critérios para calcular a percentagem de conformidade.</p>
-        <p>1 clique = Não</p>
-        <p>2 cliques = Não aplicável (N/A)</p>
+        <h2>Como preencher</h2>
+        <p>Assinala os critérios para calcular a percentagem de conformidade.</p>
+        <p>Não assinalado (por defeito) = Cumpre o critério</p>
+        <p>1 clique = Não cumpre o critério</p>
+        <p>2 cliques = Não aplicável</p>
         </div>
         <h2 class="percentagem">Conformidade: <span id="percentagem">100%</span></h2>
         <ul id="criterios" role="list"></ul>
