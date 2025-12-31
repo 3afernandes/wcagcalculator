@@ -3,57 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora Diretiva WCAG</title>
+    <title>Calculadora Acessibilidade - WCAG</title>
     <style>
         body { font-family: Arial, sans-serif; margin: 20px; }
         .container { max-width: 700px; margin: auto; }
+        .dropdown-container { background-color: #f0f0f0; padding: 10px; margin-bottom: 20px; max-width: 700px; }
+        .dropdown-container label, .dropdown-container select { font-size: 16px; }
         .criterio { margin: 5px 0; display: flex; align-items: center; }
         .criterio label { margin-left: 10px; }
         .nao-aplicavel { color: gray; text-decoration: line-through; }
-        .checkbox { width: 20px; height: 20px; appearance: none; border: 2px solid black; display: inline-block; text-align: center; }
+        .checkbox { width: 20px; height: 20px; appearance: none; border: 2px solid black; display: inline-block; text-align: center; cursor: pointer; }
         .nao-cumprido { background-color: black; }
         .nao-aplicavel-checkbox { background-color: gray; }
         .percentagem { font-size: 20px; font-weight: bold; margin-bottom: 20px; }
-        select { margin-bottom: 20px; }
+        select { font-size: 16px; }
+        ul { list-style: none; padding: 0; }
+        .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Calculadora Acessibilidade - WCAG</h1>
-        <label for="versaoWCAG">Escolha a versão da WCAG:</label>
-        <select id="versaoWCAG" onchange="carregarCriterios()">
-            <option value="2.2" selected>WCAG 2.2 (55 critérios)</option>
-            <option value="2.1">WCAG 2.1 (49 critérios)</option>
-        </select>
+        <div class="dropdown-container">
+            <label for="versaoWCAG">Escolhe a versão da WCAG:</label>
+            <select id="versaoWCAG" onchange="carregarCriterios()">
+                <option value="2.2" selected>WCAG 2.2 (55 critérios)</option>
+                <option value="2.1">WCAG 2.1 (49 critérios)</option>
+            </select>
+        </div>
+        <div class="container">
+        <h1>Calculadora Acessibilidade - Diretiva 2025</h1>
+        <p>Marca os critérios para calcular a percentagem de conformidade.</p>
+        <p>1 clique = Não</p>
+        <p>2 cliques = Não aplicável (N/A)</p>
+        </div>
         <h2 class="percentagem">Conformidade: <span id="percentagem">100%</span></h2>
-        <div id="criterios"></div>
+        <ul id="criterios" role="list"></ul>
+        <div id="liveRegion" class="sr-only" aria-live="assertive" aria-atomic="true"></div>
     </div>
 
     <script>
         const criteriosWCAG22 = [
             "1.1.1. Conteúdo Não Textual", "1.2.1. Apenas Áudio e Apenas Vídeo (pré-gravado)", "1.2.2. Legendagem (pré-gravado)", "1.2.3. Áudiodescrição",
-            "1.2.4. Legendagem (em Direto)", "1.2.5. Áudiodescrição (pré-gravado)", "1.3.1. Info e Relacionamentos", "1.3.2 Sequência Significante",
-            "1.3.3. Características Sensoriais", "1.3.4. Orientação", "1.3.5 Identificar Propósito de Entrada", "1.4.1 Utilização da Cor",
-            "1.4.2 Controlo de Áudio", "1.4.3 Contraste (Mínimo)", "1.4.4 Redimensionar Texto", "1.4.5 Imagens de Texto",
-            "1.4.10 Realinhar", "1.4.11 Contraste de Conteúdo não Textual", "1.4.12 Espaçamento de Texto", "1.4.13 Conteúdo on Hover ou Foco",
-            "2.1.1 Teclado", "2.1.2 Não bloquear o Teclado", "2.1.4 Teclas de Atalho Caráter", "2.2.1 Tempo Ajustável",
-            "2.2.2 Pausar, Parar, Ocultar", "2.3.1 Três Flashes ou Abaixo do Limiar", "2.4.1 Saltar Blocos", "2.4.2 Página Intitulada",
-            "2.4.3 Ordem o Foco", "2.4.4 Propósito da Hiperligação (em Contexto)", "2.4.5 Múltiplas Formas", "2.4.6 Cabeçalhos e Etiquetas",
-            "2.4.7 Foco Visível", "2.4.11 Foco Não Obscurecido (mínimo)", "2.5.1 Gestos de Apontador", "2.5.2 Cancelamento de Apontador",
-            "2.5.3 Etiqueta no Nome", "2.5.4 Atuação de Movimento", "2.5.7 Movimentos de arrasto", "2.5.8 Tamanho do Alvo",
-            "3.1.1 Idioma da Página", "3.1.2 Idioma das Partes", "3.2.1 Sobre o Foco", "3.2.2 Sobre uma Entrada",
-            "3.2.3 Navegação Consistente", "3.2.4 Identificação Consistente", "3.2.6 Ajuda Consistente", "3.3.1 Identificação de Erro",
-            "3.3.2 Etiquetas ou Instruções", "3.3.3 Sugestão de Correção de Erro", "3.3.4 Prevenção de Erro (Legal, Financeiro, Dados)",
-            "3.3.7 Entrada redundante", "3.3.8 Autenticação acessível (mínima)", "4.1.2 Nome, Papel, Valor", "4.1.3 Mensagens de Status"
+            "1.2.4. Legendagem (em Direto)", "1.2.5. Áudiodescrição (pré-gravado)", "1.3.1. Info e Relacionamentos", "1.3.2. Sequência Significante",
+            "1.3.3. Características Sensoriais", "1.3.4. Orientação", "1.3.5. Identificar Propósito de Entrada", "1.4.1. Utilização da Cor",
+            "1.4.2. Controlo de Áudio", "1.4.3. Contraste (Mínimo)", "1.4.4. Redimensionar Texto", "1.4.5. Imagens de Texto",
+            "1.4.10. Realinhar", "1.4.11 Contraste de Conteúdo não Textual", "1.4.12 Espaçamento de Texto", "1.4.13. Conteúdo on Hover ou Foco",
+            "2.1.1. Teclado", "2.1.2 Não bloquear o Teclado", "2.1.4. Teclas de Atalho Caráter", "2.2.1. Tempo Ajustável",
+            "2.2.2. Pausar, Parar, Ocultar", "2.3.1. Três Flashes ou Abaixo do Limiar", "2.4.1 Saltar Blocos", "2.4.2. Página Intitulada",
+            "2.4.3. Ordem o Foco", "2.4.4. Propósito da Hiperligação (em Contexto)", "2.4.5. Múltiplas Formas", "2.4.6. Cabeçalhos e Etiquetas",
+            "2.4.7. Foco Visível", "2.4.11. Foco Não Obscurecido (mínimo)", "2.5.1. Gestos de Apontador", "2.5.2. Cancelamento de Apontador",
+            "2.5.3. Etiqueta no Nome", "2.5.4. Atuação de Movimento", "2.5.7. Movimentos de arrasto", "2.5.8. Tamanho do Alvo",
+            "3.1.1. Idioma da Página", "3.1.2. Idioma das Partes", "3.2.1. Sobre o Foco", "3.2.2. Sobre uma Entrada",
+            "3.2.3. Navegação Consistente", "3.2.4. Identificação Consistente", "3.2.6. Ajuda Consistente", "3.3.1. Identificação de Erro",
+            "3.3.2. Etiquetas ou Instruções", "3.3.3. Sugestão de Correção de Erro", "3.3.4. Prevenção de Erro (Legal, Financeiro, Dados)",
+            "3.3.7. Entrada redundante", "3.3.8. Autenticação acessível (mínima)", "4.1.2. Nome, Papel, Valor", "4.1.3. Mensagens de Status"
         ];
 
         const criteriosWCAG21 = criteriosWCAG22.filter(c => ![
-            "2.4.11 Foco Não Obscurecido (mínimo)",
-            "2.5.7 Movimentos de arrasto",
-            "2.5.8 Tamanho do Alvo",
-            "3.2.6 Ajuda Consistente",
-            "3.3.7 Entrada redundante",
-            "3.3.8 Autenticação acessível (mínima)"
+            "2.4.11 Foco Não Obscurecido (mínimo)", "2.5.7 Movimentos de arrasto", "2.5.8 Tamanho do Alvo",
+            "3.2.6 Ajuda Consistente", "3.3.7 Entrada redundante", "3.3.8 Autenticação acessível (mínima)"
         ].includes(c));
 
         let criterios = criteriosWCAG22;
@@ -61,20 +70,72 @@
 
         const criteriosContainer = document.getElementById("criterios");
         const percentagemElemento = document.getElementById("percentagem");
+        const liveRegion = document.getElementById("liveRegion");
 
         function carregarCriterios() {
             const versao = document.getElementById('versaoWCAG').value;
             criterios = versao === '2.1' ? criteriosWCAG21 : criteriosWCAG22;
             totalCriterios = criterios.length;
             criteriosContainer.innerHTML = '';
+            criteriosContainer.setAttribute('aria-label', `Critérios`);
 
             criterios.forEach((criterio, index) => {
-                const div = document.createElement("div");
-                div.classList.add("criterio");
-                div.innerHTML = `<input type="checkbox" class="checkbox" id="criterio${index}" onclick="alternarEstado(${index})"> 
-                                 <label id="label${index}" for="criterio${index}">${criterio}</label>`;
-                criteriosContainer.appendChild(div);
+                const li = document.createElement("li");
+                li.classList.add("criterio");
+
+                const checkbox = document.createElement("div");
+                checkbox.classList.add("checkbox");
+                checkbox.setAttribute("role", "checkbox");
+                checkbox.setAttribute("aria-checked", "false");
+                checkbox.setAttribute("tabindex", 0);
+                checkbox.addEventListener('click', () => alternarEstado(index));
+                checkbox.addEventListener('keydown', e => { if(e.key === 'Enter' || e.key === ' ') { e.preventDefault(); alternarEstado(index); } });
+
+                const label = document.createElement("label");
+                label.setAttribute("id", `label${index}`);
+                label.setAttribute("for", `criterio${index}`);
+                label.textContent = criterio;
+
+                checkbox.setAttribute('aria-label', `${criterio}, Cumpre o critério, ${index+1} de ${totalCriterios}`);
+
+                li.appendChild(checkbox);
+                li.appendChild(label);
+                criteriosContainer.appendChild(li);
             });
+
+            atualizarPercentagem();
+        }
+
+        function alternarEstado(index) {
+            const checkbox = document.querySelectorAll('.checkbox')[index];
+            const label = document.getElementById(`label${index}`);
+            const criterio = label.textContent;
+            const estadoAtual = checkbox.getAttribute('aria-checked');
+            let mensagem;
+
+            if(estadoAtual === 'false') {
+                checkbox.classList.add('nao-cumprido');
+                checkbox.classList.remove('nao-aplicavel-checkbox');
+                label.classList.remove('nao-aplicavel');
+                checkbox.setAttribute('aria-checked', 'true');
+                mensagem = `${criterio}, Não cumpre o critério, ${index+1} de ${totalCriterios}`;
+            } else if(estadoAtual === 'true' && !checkbox.classList.contains('nao-aplicavel-checkbox')) {
+                checkbox.classList.remove('nao-cumprido');
+                checkbox.classList.add('nao-aplicavel-checkbox');
+                label.classList.add('nao-aplicavel');
+                checkbox.setAttribute('aria-checked', 'true');
+                mensagem = `${criterio}, Não aplicável, ${index+1} de ${totalCriterios}`;
+            } else {
+                checkbox.classList.remove('nao-aplicavel-checkbox');
+                checkbox.classList.remove('nao-cumprido');
+                label.classList.remove('nao-aplicavel');
+                checkbox.setAttribute('aria-checked', 'false');
+                mensagem = `${criterio}, Cumpre o critério, ${index+1} de ${totalCriterios}`;
+            }
+
+            checkbox.setAttribute('aria-label', mensagem);
+            liveRegion.textContent = mensagem;
+
             atualizarPercentagem();
         }
 
@@ -83,24 +144,8 @@
             const naoAplicaveis = Array.from(checkboxes).filter(cb => cb.classList.contains('nao-aplicavel-checkbox')).length;
             const naoCumpridos = Array.from(checkboxes).filter(cb => cb.classList.contains('nao-cumprido')).length;
             const avaliaveis = totalCriterios - naoAplicaveis;
-            const percentagem = avaliaveis > 0 ? (((avaliaveis - naoCumpridos) / avaliaveis) * 100).toFixed(2) : 100;
-            percentagemElemento.textContent = `${percentagem}%`;
-        }
-
-        function alternarEstado(index) {
-            const checkbox = document.getElementById(`criterio${index}`);
-            const label = document.getElementById(`label${index}`);
-            if (!checkbox.classList.contains('nao-cumprido') && !checkbox.classList.contains('nao-aplicavel-checkbox')) {
-                checkbox.classList.add('nao-cumprido');
-            } else if (checkbox.classList.contains('nao-cumprido')) {
-                checkbox.classList.remove('nao-cumprido');
-                checkbox.classList.add('nao-aplicavel-checkbox');
-                label.classList.add('nao-aplicavel');
-            } else {
-                checkbox.classList.remove('nao-aplicavel-checkbox');
-                label.classList.remove('nao-aplicavel');
-            }
-            atualizarPercentagem();
+            let percentagem = avaliaveis > 0 ? ((avaliaveis - naoCumpridos) / avaliaveis) * 100 : 100;
+            percentagemElemento.textContent = percentagem === 100 ? '100%' : `${percentagem.toFixed(2)}%`;
         }
 
         carregarCriterios();
